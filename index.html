@@ -4,35 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BotPress Chat Conversations</title>
-    <!-- Include Bootstrap CSS from a CDN -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #result {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            white-space: pre-wrap; /* Preserve line breaks */
+        }
+        .conversation-link {
+            cursor: pointer;
+            text-decoration: underline;
+            color: blue;
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <h1 class="text-center">BotPress Chat Conversations</h1>
-                <button id="fetchData" class="btn btn-primary">Fetch Data</button>
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <h5 class="card-title">API Response</h5>
-                        <pre id="result" class="card-text"></pre>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Include Bootstrap JS and jQuery from a CDN -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    <h1>BotPress Chat Conversations</h1>
+    <button id="fetchData">Fetch Conversations</button>
+    <div id="result"></div>
+    <div id="conversation"></div>
     <script>
         document.getElementById("fetchData").addEventListener("click", function () {
             const resultElement = document.getElementById("result");
@@ -46,11 +41,45 @@
             })
             .then(response => response.json())
             .then(data => {
-                resultElement.innerHTML = JSON.stringify(data, null, 2);
+                resultElement.innerHTML = ""; // Clear the loading message
+
+                if (data.conversations && Array.isArray(data.conversations)) {
+                    data.conversations.forEach(conversation => {
+                        const conversationLink = document.createElement("a");
+                        conversationLink.className = "conversation-link";
+                        conversationLink.setAttribute("data-conversation-id", conversation.id);
+                        conversationLink.textContent = `Conversation ID: ${conversation.id}`;
+                        resultElement.appendChild(conversationLink);
+                    });
+                } else {
+                    resultElement.innerHTML = "No conversations found.";
+                }
             })
             .catch(error => {
                 resultElement.innerHTML = "Error: " + error.message;
             });
+        });
+
+        document.getElementById("result").addEventListener("click", function (event) {
+            if (event.target && event.target.matches("a.conversation-link")) {
+                const conversationId = event.target.getAttribute("data-conversation-id");
+                const conversationElement = document.getElementById("conversation");
+                conversationElement.innerHTML = "Loading...";
+
+                fetch(`https://api.botpress.cloud/v1/chat/users/${conversationId}`, {
+                    headers: {
+                        "x-bot-id": "8927a9c9-2f61-49b1-bbe5-930242ae3538",
+                        "Authorization": "Bearer bp_pat_a4GLr7SOqybtrUWhjruPfQgSH9rNNKPBATNN",
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    conversationElement.innerHTML = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    conversationElement.innerHTML = "Error: " + error.message;
+                });
+            }
         });
     </script>
 </body>
