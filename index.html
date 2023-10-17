@@ -66,8 +66,8 @@
                 const conversationElement = document.getElementById("conversation");
                 conversationElement.innerHTML = "Loading...";
 
-                // Update the endpoint to 'https://api.botpress.cloud/v1/chat/conversations/?id={id}'
-                fetch(`https://api.botpress.cloud/v1/chat/conversations/?id=${conversationId}`, {
+                // Update the endpoint to 'https://api.botpress.cloud/v1/chat/messages/?id={id}'
+                fetch(`https://api.botpress.cloud/v1/chat/messages/?id=${conversationId}`, {
                     headers: {
                         "x-bot-id": "8927a9c9-2f61-49b1-bbe5-930242ae3538",
                         "Authorization": "Bearer bp_pat_a4GLr7SOqybtrUWhjruPfQgSH9rNNKPBATNN",
