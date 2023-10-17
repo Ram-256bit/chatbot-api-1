@@ -27,7 +27,7 @@
             const resultElement = document.getElementById("result");
             resultElement.innerHTML = "Loading...";
 
-            fetch("https://api.botpress.cloud/v1/chat/conversations", {
+            fetch("https://api.botpress.cloud/v1/chat/users", {
                 headers: {
                     "x-bot-id": "8927a9c9-2f61-49b1-bbe5-930242ae3538",
                     "Authorization": "Bearer bp_pat_a4GLr7SOqybtrUWhjruPfQgSH9rNNKPBATNN",
@@ -35,7 +35,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                resultElement.innerHTML = JSON.stringify(data, null, 2);
+                resultElement.innerHTML = JSON.stringify(data, null, 1);
             })
             .catch(error => {
                 resultElement.innerHTML = "Error: " + error.message;
