@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BotPress Chat Conversations</title>
+    <script src="jsonformatter_1.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #result {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+    
+</head>
+<body>
+    <h1>BotPress Chat Conversations</h1>
+    <button id="fetchData">Fetch Data</button>
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById("fetchData").addEventListener("click", function () {
+            const resultElement = document.getElementById("result");
+            resultElement.innerHTML = "Loading...";
+    
+            fetch("https://api.botpress.cloud/v1/chat/conversations", {
+                headers: {
+                    "x-bot-id": "8927a9c9-2f61-49b1-bbe5-930242ae3538",
+                    "Authorization": "Bearer bp_pat_a4GLr7SOqybtrUWhjruPfQgSH9rNNKPBATNN",
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Create a JSONFormatter instance and display the JSON data
+                const formatter = new JSONFormatter(data, 1, {
+                    theme: '',
+                    hoverPreviewEnabled: true,
+                });
+    
+                resultElement.innerHTML = ''; // Clear the loading message
+                resultElement.appendChild(formatter.render()); // Append the formatted JSON
+            })
+            .catch(error => {
+                resultElement.innerHTML = "Error: " + error.message;
+            });
+        });
+    </script>
+    
+    
+</body>
+</html>
